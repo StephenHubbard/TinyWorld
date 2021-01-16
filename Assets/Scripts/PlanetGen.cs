@@ -6,11 +6,13 @@ using UnityEngine.InputSystem;
 public class PlanetGen : MonoBehaviour
 {
     [SerializeField] GameObject planet;
+    [SerializeField] GameObject planetCore;
 
     [SerializeField] private LayerMask planetMask = new LayerMask();
+    [SerializeField] private LayerMask planetCoreMask = new LayerMask();
 
-    [SerializeField] GameObject tree;
-    [SerializeField] GameObject plateau;
+    [SerializeField] GameObject[] tree;
+    [SerializeField] GameObject[] plateau;
     [SerializeField] GameObject volcano;
 
     [SerializeField] private int amountOfTrees = 20;
@@ -24,31 +26,29 @@ public class PlanetGen : MonoBehaviour
         mainCamera = Camera.main;
 
         SpawnPlateaus();
-        SpawnTrees();
         SpawnVolcanoes();
+        SpawnTrees();
     }
 
     private void SpawnTrees()
     {
         for (int i = 0; i < amountOfTrees; i++)
         {
-            Vector3 randomPointOnSphere = Random.onUnitSphere * ((planet.transform.localScale.x / 2) + 1f);
+            Vector3 randomPointOnSphere = Random.onUnitSphere * ((planet.transform.localScale.x / 2));
 
-            GameObject newTree = Instantiate(tree, randomPointOnSphere, transform.rotation);
+            GameObject newTree = Instantiate(tree[Random.Range(0, tree.Length)], randomPointOnSphere, transform.rotation);
 
             RaycastHit hit;
 
-            if (Physics.Raycast(newTree.transform.position, planet.transform.position - newTree.transform.position, out hit, planetMask))
+            if (Physics.Raycast(newTree.transform.position, planetCore.transform.position - newTree.transform.position, out hit, planetCoreMask, ~planetMask))
             {
                 newTree.transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal);
 
             }
 
-
             newTree.transform.parent = planet.transform;
 
-            newTree.transform.Translate(Vector3.down * 1.2f, Space.Self);
-
+            newTree.transform.Translate(Vector3.down * .2f, Space.Self);
         }
     }
 
@@ -56,22 +56,21 @@ public class PlanetGen : MonoBehaviour
     {
         for (int i = 0; i < amountOfPlateaus; i++)
         {
-            Vector3 randomPointOnSphere = Random.onUnitSphere * ((planet.transform.localScale.x / 2) + 1f);
+            Vector3 randomPointOnSphere = Random.onUnitSphere * ((planet.transform.localScale.x / 2));
 
-            GameObject newPlateau = Instantiate(plateau, randomPointOnSphere, transform.rotation);
+            GameObject newPlateau = Instantiate(plateau[Random.Range(0, plateau.Length)], randomPointOnSphere, transform.rotation);
 
             RaycastHit hit;
 
-            if (Physics.Raycast(newPlateau.transform.position, planet.transform.position - newPlateau.transform.position, out hit, planetMask))
+            if (Physics.Raycast(newPlateau.transform.position, planetCore.transform.position - newPlateau.transform.position, out hit, planetCoreMask, ~planetMask))
             {
                 newPlateau.transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal);
-
+                newPlateau.transform.Rotate(0f, Random.Range(0f, 90f), 0f, Space.Self);
             }
-
 
             newPlateau.transform.parent = planet.transform;
 
-            newPlateau.transform.Translate(Vector3.down * 1.3f, Space.Self);
+            newPlateau.transform.Translate(Vector3.down * .3f, Space.Self);
 
         }
     }
@@ -80,13 +79,13 @@ public class PlanetGen : MonoBehaviour
     {
         for (int i = 0; i < amountOfVolcano; i++)
         {
-            Vector3 randomPointOnSphere = Random.onUnitSphere * ((planet.transform.localScale.x / 2) + 1f);
+            Vector3 randomPointOnSphere = Random.onUnitSphere * ((planet.transform.localScale.x / 2));
 
             GameObject newVolcano = Instantiate(volcano, randomPointOnSphere, transform.rotation);
 
             RaycastHit hit;
 
-            if (Physics.Raycast(newVolcano.transform.position, planet.transform.position - newVolcano.transform.position, out hit, planetMask))
+            if (Physics.Raycast(newVolcano.transform.position, planetCore.transform.position - newVolcano.transform.position, out hit, planetCoreMask, ~planetMask))
             {
                 newVolcano.transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal);
 
@@ -94,7 +93,7 @@ public class PlanetGen : MonoBehaviour
 
             newVolcano.transform.parent = planet.transform;
 
-            newVolcano.transform.Translate(Vector3.down * 1.3f, Space.Self);
+            newVolcano.transform.Translate(Vector3.down * .2f, Space.Self);
 
         }
     }

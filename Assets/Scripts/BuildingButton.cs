@@ -54,6 +54,8 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         if (buildingPreviewInstance == null) { return; }
 
+
+
         GameObject newBuilding = null;
 
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -61,12 +63,20 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, planetMask))
         {
             newBuilding = Instantiate(building1Prefab, hit.point, Quaternion.identity);
+
+            if (newBuilding.GetComponent<ResidentialBuilding>())
+            {
+                newBuilding.GetComponent<ResidentialBuilding>().isPlaced = true;
+            }
+            else if (newBuilding.GetComponent<CommercialBuilding>())
+            {
+                newBuilding.GetComponent<CommercialBuilding>().isPlaced = true;
+            }
         }
 
         newBuilding.transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal);
 
         Destroy(buildingPreviewInstance);
-
 
     }
 }
