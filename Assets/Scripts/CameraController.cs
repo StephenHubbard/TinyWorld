@@ -9,21 +9,17 @@ public class CameraController : MonoBehaviour
     public float xSpeed = 3.5f;
     float sensitivity = 17f;
 
-    float minFov = 35;
+    float minFov = 10;
     float maxFov = 100;
 
-
-    void Update()
+    private void Start()
     {
+        Camera.main.fieldOfView = 40;
+    }
 
-        if (Input.GetMouseButton(1))
-        {
 
-            transform.RotateAround(target.transform.position, transform.up, Input.GetAxis("Mouse X") * xSpeed);
-            transform.RotateAround(target.transform.position, transform.right, -Input.GetAxis("Mouse Y") * xSpeed);
-
-        }
-
+    private void Update()
+    {
 
         float fov = Camera.main.fieldOfView;
         fov += Input.GetAxis("Mouse ScrollWheel") * -sensitivity;
