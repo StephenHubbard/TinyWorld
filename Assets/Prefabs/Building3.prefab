@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 3488020955485969223}
   - component: {fileID: 3488020955485002119}
   - component: {fileID: 208075238751833947}
-  m_Layer: 0
+  - component: {fileID: 7254637799863001874}
+  m_Layer: 11
   m_Name: Building3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3488020955487258439}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.79312557, y: 25.87, z: 2.1551814}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_Children: []
   m_Father: {fileID: 0}
@@ -94,5 +95,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad930d6cecd42b84293505ad6c80e9e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingCost: 10
-  generateDollarsPerSecond: 10
+  buildingCost: 100
+  generateDollarsPerSecond: 3
+  residents: 0
+  isCommericial: 1
+  polutionLevel: 0
+  workersNeeded: 6
+  isPlaced: 0
+--- !u!65 &7254637799863001874
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3488020955487258439}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 13.544788, y: 13.714752, z: 18.279127}
+  m_Center: {x: -0.7279129, y: 6.857376, z: -0.0000009536743}

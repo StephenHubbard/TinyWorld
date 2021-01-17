@@ -6,16 +6,22 @@ using UnityEngine.InputSystem;
 
 public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    [SerializeField] private GameObject building1Prefab = null;
+    [SerializeField] private GameObject buildingPrefab = null;
     [SerializeField] private LayerMask planetMask = new LayerMask();
+    [SerializeField] private LayerMask buildingMask = new LayerMask();
 
     private GameObject buildingPreviewInstance;
     private Camera mainCamera;
-    
+
+    private MoneyManager moneyManager;
+    private PopulationManager populationManager;
 
     void Start()
     {
         mainCamera = Camera.main;
+
+        moneyManager = FindObjectOfType<MoneyManager>();
+        populationManager = FindObjectOfType<PopulationManager>();
     }
 
     void Update()
@@ -37,6 +43,17 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         buildingPreviewInstance.transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal);
 
 
+        if (TryPlaceBuilding(hit.point))
+        {
+            buildingPreviewInstance.GetComponent<Renderer>().material.SetColor("_Color", Color.green);
+        }
+        else
+        {
+            buildingPreviewInstance.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
+        }
+
+
+
         if (!buildingPreviewInstance.activeSelf)
         {
             buildingPreviewInstance.SetActive(true);
@@ -47,13 +64,26 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         if (eventData.button != PointerEventData.InputButton.Left) { return; }
 
-        buildingPreviewInstance = Instantiate(building1Prefab);
+        buildingPreviewInstance = Instantiate(buildingPrefab);
+
+        
+        if (moneyManager.currentDollars < buildingPreviewInstance.GetComponent<Building>().getCost())
+        {
+            print("not enough money");
+            Destroy(buildingPreviewInstance);
+        }
+
+        if (populationManager.currentPopulation < buildingPreviewInstance.GetComponent<Building>().getWorkersNeeded())
+        {
+            print("not enough workers");
+            Destroy(buildingPreviewInstance);
+        }
+
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
         if (buildingPreviewInstance == null) { return; }
-
 
 
         GameObject newBuilding = null;
@@ -62,21 +92,55 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, planetMask))
         {
-            newBuilding = Instantiate(building1Prefab, hit.point, Quaternion.identity);
 
-            if (newBuilding.GetComponent<ResidentialBuilding>())
+            if (TryPlaceBuilding(hit.point))
             {
-                newBuilding.GetComponent<ResidentialBuilding>().isPlaced = true;
+                newBuilding = Instantiate(buildingPrefab, hit.point, Quaternion.identity);
             }
-            else if (newBuilding.GetComponent<CommercialBuilding>())
+            else
             {
-                newBuilding.GetComponent<CommercialBuilding>().isPlaced = true;
+                Destroy(buildingPreviewInstance);
+            }
+
+            if (newBuilding)
+            {
+                newBuilding.GetComponent<Building>().isPlaced = true;
+
+                newBuilding.transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal);
+
+                moneyManager.currentDollars -= newBuilding.GetComponent<Building>().getCost();
+
+                populationManager.currentPopulation -= newBuilding.GetComponent<Building>().getWorkersNeeded();
             }
         }
 
-        newBuilding.transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal);
 
         Destroy(buildingPreviewInstance);
+    }
+
+    private void BuyBuilding()
+    {
 
     }
+
+    private bool TryPlaceBuilding(Vector3 point)
+    {
+        BoxCollider buildingCollider = buildingPreviewInstance.GetComponent<BoxCollider>();
+
+        // can't get checkbox to function as intended
+
+        if (Physics.CheckBox(
+                    point + buildingCollider.center,
+                    buildingCollider.size / 2,
+                    Quaternion.identity,
+                    planetMask))
+        {
+            return true;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
 }

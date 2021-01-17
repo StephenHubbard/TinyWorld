@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 8411325394785898150}
   - component: {fileID: 8411325394784603782}
   - component: {fileID: 8411325394783472710}
-  - component: {fileID: -4692706954935764702}
-  m_Layer: 0
+  - component: {fileID: 6651452042827794645}
+  - component: {fileID: 3337031642553937262}
+  m_Layer: 11
   m_Name: House1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8411325394785407622}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.164942, y: 26.874004, z: -7.4669533}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -82,7 +83,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &-4692706954935764702
+--- !u!65 &6651452042827794645
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8411325394785407622}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 15.860607, y: 10.869454, z: 14.830269}
+  m_Center: {x: 0.0000019073486, y: 5.434727, z: -0.0000038146973}
+--- !u!114 &3337031642553937262
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,6 +105,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8411325394785407622}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59dd4597fb82b8747902ebdfe9140be5, type: 3}
+  m_Script: {fileID: 11500000, guid: ad930d6cecd42b84293505ad6c80e9e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buildingCost: 10
+  generateDollarsPerSecond: 0
+  residents: 3
+  isCommericial: 0
+  isPlaced: 0

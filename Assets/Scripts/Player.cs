@@ -29,16 +29,6 @@ public class Player : MonoBehaviour
 
         transform.Translate(x, 0, z);
 
-        if (Input.GetKey(KeyCode.E))
-        {
-            transform.Rotate(0, 150 * Time.deltaTime, 0);
-        }
-
-        if (Input.GetKey(KeyCode.Q))
-        {
-            transform.Rotate(0, -150 * Time.deltaTime, 0);
-        }
-
         RaycastHit hit = new RaycastHit();
         if (Physics.Raycast(transform.position, -transform.up, out hit, 10))
         {
