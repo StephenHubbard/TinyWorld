@@ -7,6 +7,7 @@ public class PlanetGen : MonoBehaviour
 {
     [SerializeField] GameObject planet;
     [SerializeField] GameObject planetCore;
+    [SerializeField] Transform spawnedObjectsTransform;
 
     [SerializeField] private LayerMask planetMask = new LayerMask();
     [SerializeField] private LayerMask planetCoreMask = new LayerMask();
@@ -46,7 +47,7 @@ public class PlanetGen : MonoBehaviour
 
             }
 
-            newTree.transform.parent = planet.transform;
+            newTree.transform.parent = spawnedObjectsTransform;
 
             newTree.transform.Translate(Vector3.down * .2f, Space.Self);
         }
@@ -68,7 +69,7 @@ public class PlanetGen : MonoBehaviour
                 newPlateau.transform.Rotate(0f, Random.Range(0f, 90f), 0f, Space.Self);
             }
 
-            newPlateau.transform.parent = planet.transform;
+            newPlateau.transform.parent = spawnedObjectsTransform;
 
             newPlateau.transform.Translate(Vector3.down * .3f, Space.Self);
 
@@ -91,7 +92,7 @@ public class PlanetGen : MonoBehaviour
 
             }
 
-            newVolcano.transform.parent = planet.transform;
+            newVolcano.transform.parent = spawnedObjectsTransform;
 
             newVolcano.transform.Translate(Vector3.down * .2f, Space.Self);
 

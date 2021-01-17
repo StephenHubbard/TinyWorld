@@ -1,14 +1,21 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] private GameObject buildingPrefab = null;
     [SerializeField] private LayerMask planetMask = new LayerMask();
     [SerializeField] private LayerMask buildingMask = new LayerMask();
+    [SerializeField] private TMP_Text scoreText = null;
+
+    [SerializeField] private List<GameObject> buildingsInSphereDetectionCurrent = new List<GameObject>();
+
+    private Vector3 rendererRotation;
 
     private GameObject buildingPreviewInstance;
     private Camera mainCamera;
@@ -30,6 +37,13 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         if (buildingPreviewInstance == null) { return; }
 
         UpdateBuildingPreview();
+
+        UpdatePointText();
+    }
+
+    private void UpdatePointText()
+    {
+        throw new NotImplementedException();
     }
 
     private void UpdateBuildingPreview()
@@ -43,20 +57,37 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         buildingPreviewInstance.transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal);
 
 
-        if (TryPlaceBuilding(hit.point))
-        {
-            buildingPreviewInstance.GetComponent<Renderer>().material.SetColor("_Color", Color.green);
-        }
-        else
-        {
-            buildingPreviewInstance.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
-        }
-
-
+        //if (TryPlaceBuilding(hit.point))
+        //{
+        //    buildingPreviewInstance.GetComponent<Renderer>().material.SetColor("_Color", Color.green);
+        //}
+        //else
+        //{
+        //    buildingPreviewInstance.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
+        //}
 
         if (!buildingPreviewInstance.activeSelf)
         {
             buildingPreviewInstance.SetActive(true);
+        }
+
+        RotateBuilding();
+
+    }
+
+    private void RotateBuilding()
+    {
+        if (Input.GetKey(KeyCode.Q))
+        {
+            var thisRenderer = buildingPreviewInstance.transform.Find("Renderer");
+            thisRenderer.Rotate(0, 100 * Time.deltaTime, 0);
+            rendererRotation = new Vector3(thisRenderer.transform.rotation.eulerAngles.x, thisRenderer.transform.rotation.eulerAngles.y, thisRenderer.transform.rotation.eulerAngles.z);
+        }
+        if (Input.GetKey(KeyCode.E))
+        {
+            var thisRenderer = buildingPreviewInstance.transform.Find("Renderer");
+            thisRenderer.Rotate(0, -100 * Time.deltaTime, 0);
+            rendererRotation = new Vector3(thisRenderer.transform.rotation.eulerAngles.x, thisRenderer.transform.rotation.eulerAngles.y, thisRenderer.transform.rotation.eulerAngles.z);
         }
     }
 
@@ -65,6 +96,8 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         if (eventData.button != PointerEventData.InputButton.Left) { return; }
 
         buildingPreviewInstance = Instantiate(buildingPrefab);
+
+        //buildingPreviewInstance.GetComponent<Building>().toggleSphereDetectionGO();
 
         
         if (moneyManager.currentDollars < buildingPreviewInstance.GetComponent<Building>().getCost())
@@ -85,6 +118,7 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         if (buildingPreviewInstance == null) { return; }
 
+        buildingsInSphereDetectionCurrent = buildingPreviewInstance.GetComponent<Building>().buildingsInSphereDetection;
 
         GameObject newBuilding = null;
 
@@ -96,6 +130,8 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             if (TryPlaceBuilding(hit.point))
             {
                 newBuilding = Instantiate(buildingPrefab, hit.point, Quaternion.identity);
+
+                newBuilding.GetComponent<Building>().buildingsInSphereDetection = buildingsInSphereDetectionCurrent;
             }
             else
             {
@@ -108,18 +144,27 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
                 newBuilding.transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal);
 
-                moneyManager.currentDollars -= newBuilding.GetComponent<Building>().getCost();
+                BuyBuilding(newBuilding);
 
-                populationManager.currentPopulation -= newBuilding.GetComponent<Building>().getWorkersNeeded();
+                UseResidents(newBuilding);
+
+                newBuilding.GetComponent<Building>().sphereDetection.GetComponent<MeshRenderer>().enabled = false;
             }
         }
-
-
         Destroy(buildingPreviewInstance);
+
+
+
     }
 
-    private void BuyBuilding()
+    private void UseResidents(GameObject newBuilding)
     {
+        populationManager.currentPopulation -= newBuilding.GetComponent<Building>().getWorkersNeeded();
+    }
+
+    private void BuyBuilding(GameObject newBuilding)
+    {
+        moneyManager.currentDollars -= newBuilding.GetComponent<Building>().getCost();
 
     }
 
