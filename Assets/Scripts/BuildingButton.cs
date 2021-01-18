@@ -29,6 +29,7 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
         moneyManager = FindObjectOfType<MoneyManager>();
         populationManager = FindObjectOfType<PopulationManager>();
+
     }
 
     void Update()
@@ -43,7 +44,10 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private void UpdatePointText()
     {
-        throw new NotImplementedException();
+        if (scoreText)
+        {
+            scoreText.text = buildingsInSphereDetectionCurrent.Count.ToString();
+        }
     }
 
     private void UpdateBuildingPreview()
@@ -96,6 +100,8 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         if (eventData.button != PointerEventData.InputButton.Left) { return; }
 
         buildingPreviewInstance = Instantiate(buildingPrefab);
+
+        //scoreText = buildingPreviewInstance.transform.Find("ScoreText").gameObject.GetComponent<TextMeshPro>();
 
         //buildingPreviewInstance.GetComponent<Building>().toggleSphereDetectionGO();
 
