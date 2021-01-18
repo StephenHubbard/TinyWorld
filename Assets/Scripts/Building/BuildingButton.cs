@@ -45,7 +45,7 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private void UpdatePointText()
     {
-        buildingPreviewInstance.GetComponent<Building>().scoreText.text = (buildingPreviewInstance.GetComponent<Building>().buildingsInSphereDetection.Count - 1).ToString();
+        buildingPreviewInstance.GetComponent<Building>().scoreText.text = (buildingPreviewInstance.GetComponent<Building>().points).ToString();
     }
 
     private void UpdateBuildingPreview()

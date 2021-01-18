@@ -18,6 +18,8 @@ public class Building : MonoBehaviour
     [SerializeField] private int detectionRadius = 50;
 
     [SerializeField] public int points = 0;
+
+
     [SerializeField] public List<GameObject> buildingsInSphereDetection = new List<GameObject>();
 
     [SerializeField] private int residentialNearby = 0;
@@ -56,15 +58,7 @@ public class Building : MonoBehaviour
 
     }
 
-    private void Update()
-    {
-        calcPoints();
-    }
-
-    private void calcPoints()
-    {
-        points = buildingsInSphereDetection.Count;
-    }
+    
 
     public void addObjectToList(GameObject go)
     {
