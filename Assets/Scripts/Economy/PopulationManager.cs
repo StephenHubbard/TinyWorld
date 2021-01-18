@@ -15,6 +15,6 @@ public class PopulationManager : MonoBehaviour
 
     void Update()
     {
-        populationText.text = $"Population {currentPopulation}";
+        populationText.text = $"Population: {currentPopulation}";
     }
 }

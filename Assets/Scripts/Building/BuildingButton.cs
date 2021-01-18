@@ -11,7 +11,6 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     [SerializeField] private GameObject buildingPrefab = null;
     [SerializeField] private LayerMask planetMask = new LayerMask();
     [SerializeField] private LayerMask buildingMask = new LayerMask();
-    [SerializeField] private TMP_Text scoreText = null;
 
     [SerializeField] private List<GameObject> buildingsInSphereDetectionCurrent = new List<GameObject>();
 
@@ -22,6 +21,7 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private MoneyManager moneyManager;
     private PopulationManager populationManager;
+    private PointsManager pointsManager;
 
     void Start()
     {
@@ -29,25 +29,23 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
         moneyManager = FindObjectOfType<MoneyManager>();
         populationManager = FindObjectOfType<PopulationManager>();
+        pointsManager = FindObjectOfType<PointsManager>();
 
     }
 
     void Update()
     {
+        if (buildingPreviewInstance)
+        {
+            UpdateBuildingPreview();
 
-        if (buildingPreviewInstance == null) { return; }
-
-        UpdateBuildingPreview();
-
-        UpdatePointText();
+            UpdatePointText();
+        }
     }
 
     private void UpdatePointText()
     {
-        if (scoreText)
-        {
-            scoreText.text = buildingsInSphereDetectionCurrent.Count.ToString();
-        }
+        buildingPreviewInstance.GetComponent<Building>().scoreText.text = (buildingPreviewInstance.GetComponent<Building>().buildingsInSphereDetection.Count - 1).ToString();
     }
 
     private void UpdateBuildingPreview()
@@ -59,7 +57,6 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         buildingPreviewInstance.transform.position = hit.point;
 
         buildingPreviewInstance.transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal);
-
 
         //if (TryPlaceBuilding(hit.point))
         //{
@@ -106,13 +103,13 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         //buildingPreviewInstance.GetComponent<Building>().toggleSphereDetectionGO();
 
         
-        if (moneyManager.currentDollars < buildingPreviewInstance.GetComponent<Building>().getCost())
+        if (moneyManager.currentDollars < buildingPreviewInstance.GetComponent<Building>().GetCost())
         {
             print("not enough money");
             Destroy(buildingPreviewInstance);
         }
 
-        if (populationManager.currentPopulation < buildingPreviewInstance.GetComponent<Building>().getWorkersNeeded())
+        if (populationManager.currentPopulation < buildingPreviewInstance.GetComponent<Building>().GetWorkersNeeded())
         {
             print("not enough workers");
             Destroy(buildingPreviewInstance);
@@ -124,7 +121,7 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         if (buildingPreviewInstance == null) { return; }
 
-        buildingsInSphereDetectionCurrent = buildingPreviewInstance.GetComponent<Building>().buildingsInSphereDetection;
+        //buildingsInSphereDetectionCurrent = buildingPreviewInstance.GetComponent<Building>().buildingsInSphereDetection;
 
         GameObject newBuilding = null;
 
@@ -132,45 +129,52 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, planetMask))
         {
-
-            if (TryPlaceBuilding(hit.point))
-            {
-                newBuilding = Instantiate(buildingPrefab, hit.point, Quaternion.identity);
-
-                newBuilding.GetComponent<Building>().buildingsInSphereDetection = buildingsInSphereDetectionCurrent;
-            }
-            else
-            {
-                Destroy(buildingPreviewInstance);
-            }
-
-            if (newBuilding)
-            {
-                newBuilding.GetComponent<Building>().isPlaced = true;
-
-                newBuilding.transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal);
-
-                BuyBuilding(newBuilding);
-
-                UseResidents(newBuilding);
-
-                newBuilding.GetComponent<Building>().sphereDetection.GetComponent<MeshRenderer>().enabled = false;
-            }
+            newBuilding = InstantiateNewBuilding(newBuilding, hit);
         }
         Destroy(buildingPreviewInstance);
+    }
 
+    private GameObject InstantiateNewBuilding(GameObject newBuilding, RaycastHit hit)
+    {
+        if (TryPlaceBuilding(hit.point))
+        {
+            newBuilding = Instantiate(buildingPrefab, hit.point, Quaternion.identity);
 
+            //newBuilding.GetComponent<Building>().buildingsInSphereDetection = buildingsInSphereDetectionCurrent;
+        }
+        else
+        {
+            Destroy(buildingPreviewInstance);
+        }
 
+        if (newBuilding)
+        {
+            newBuilding.GetComponent<Building>().isPlaced = true;
+
+            newBuilding.transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal);
+
+            BuyBuilding(newBuilding);
+
+            UseResidents(newBuilding);
+
+            newBuilding.GetComponent<Building>().sphereDetection.GetComponent<MeshRenderer>().enabled = false;
+
+            newBuilding.GetComponent<Building>().scoreText.gameObject.SetActive(false);
+
+            pointsManager.CalculatePoints();
+        }
+
+        return newBuilding;
     }
 
     private void UseResidents(GameObject newBuilding)
     {
-        populationManager.currentPopulation -= newBuilding.GetComponent<Building>().getWorkersNeeded();
+        populationManager.currentPopulation -= newBuilding.GetComponent<Building>().GetWorkersNeeded();
     }
 
     private void BuyBuilding(GameObject newBuilding)
     {
-        moneyManager.currentDollars -= newBuilding.GetComponent<Building>().getCost();
+        moneyManager.currentDollars -= newBuilding.GetComponent<Building>().GetCost();
 
     }
 

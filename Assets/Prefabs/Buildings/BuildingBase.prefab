@@ -12,14 +12,13 @@ GameObject:
   - component: {fileID: 8547996504107357434}
   - component: {fileID: 2698050059362548640}
   - component: {fileID: 2087558259879319052}
-  - component: {fileID: 1875541555357479505}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3995352496327517648
 RectTransform:
   m_ObjectHideFlags: 0
@@ -28,7 +27,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 208730450800701670}
   m_LocalRotation: {x: -0, y: 0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 2.07}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8807369448014007524}
@@ -37,8 +36,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 1.99}
-  m_SizeDelta: {x: 5, y: 5}
+  m_AnchoredPosition: {x: 0, y: 3.7651}
+  m_SizeDelta: {x: 5, y: 1.7901821}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &8547996504107357434
 Canvas:
@@ -59,7 +58,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_TargetDisplay: 0
 --- !u!114 &2698050059362548640
 MonoBehaviour:
@@ -100,18 +99,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &1875541555357479505
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 208730450800701670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d95ea6506cfea53469c7e50969651797, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2213786268379563060
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,8 +230,11 @@ MonoBehaviour:
   citizenPrefab: {fileID: 6069665827321331021, guid: 3090268166b7e7d45aecf9d3c49beaa9, type: 3}
   residentSpawnPoint: {fileID: 6917296360998392102}
   sphereDetection: {fileID: 47513167784382431}
+  scoreText: {fileID: 922385919948354442}
   detectionRadius: 10
   buildingsInSphereDetection: []
+  residentialNearby: 0
+  commercialNearby: 0
   isPlaced: 0
 --- !u!114 &109916006703556471
 MonoBehaviour:
@@ -270,6 +260,7 @@ GameObject:
   - component: {fileID: 8807369448014007524}
   - component: {fileID: 2569745172969713345}
   - component: {fileID: 922385919948354442}
+  - component: {fileID: 6449620309083000371}
   m_Layer: 0
   m_Name: ScoreText
   m_TagString: Untagged
@@ -291,10 +282,10 @@ RectTransform:
   m_Father: {fileID: 3995352496327517648}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 14.792969, y: 15.802643}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2569745172969713345
 CanvasRenderer:
@@ -324,7 +315,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 0
+  m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -351,8 +342,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 4
-  m_fontSizeBase: 4
+  m_fontSize: 2
+  m_fontSizeBase: 2
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -393,6 +384,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6449620309083000371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9143682217839697231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d95ea6506cfea53469c7e50969651797, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3341248197609391083
 PrefabInstance:
   m_ObjectHideFlags: 0

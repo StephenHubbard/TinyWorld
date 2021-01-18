@@ -76,6 +76,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2665374916975821472, guid: b243c36ebfb79374fba7d5e4d72d2685, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.08
+      objectReference: {fileID: 0}
     - target: {fileID: 3337031642553937262, guid: b243c36ebfb79374fba7d5e4d72d2685, type: 3}
       propertyPath: residents
       value: 0
@@ -90,7 +94,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3337031642553937262, guid: b243c36ebfb79374fba7d5e4d72d2685, type: 3}
       propertyPath: detectionRadius
-      value: 30
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3337031642553937262, guid: b243c36ebfb79374fba7d5e4d72d2685, type: 3}
       propertyPath: generateDollarsPerSecond
