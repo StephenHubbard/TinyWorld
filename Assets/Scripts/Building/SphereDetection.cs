@@ -25,8 +25,9 @@ public class SphereDetection : MonoBehaviour
     {
         if (other.gameObject.GetComponent<Building>())
         {
-
             myBuilding.removeObjectFromList(other.gameObject);
+
+            other.GetComponent<Building>().scoreText.gameObject.SetActive(false);
         }
     }
 }

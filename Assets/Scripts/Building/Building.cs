@@ -18,12 +18,13 @@ public class Building : MonoBehaviour
     [SerializeField] private int detectionRadius = 50;
 
     [SerializeField] public int points = 0;
+    [SerializeField] public int pointsOfficial = 0;
 
 
     [SerializeField] public List<GameObject> buildingsInSphereDetection = new List<GameObject>();
 
-    [SerializeField] private int residentialNearby = 0;
-    [SerializeField] private int commercialNearby = 0;
+    //[SerializeField] private int residentialNearby = 0;
+    //[SerializeField] private int commercialNearby = 0;
 
     private MoneyManager moneyManager;
     private PopulationManager populationManager;
@@ -110,50 +111,50 @@ public class Building : MonoBehaviour
     private IEnumerator UpdateBuildingsCounts()
     {
         yield return new WaitForSeconds(1f);
-        UpdateResidentialBuildings();
-        UpdateCommericialBuildings();
+        //UpdateResidentialBuildings();
+        //UpdateCommericialBuildings();
         StartCoroutine(UpdateBuildingsCounts());
     }
 
-    private void UpdateResidentialBuildings()
-    {
-        residentialNearby = 0;
+    //private void UpdateResidentialBuildings()
+    //{
+    //    residentialNearby = 0;
 
-        for (int i = 0; i < buildingsInSphereDetection.Count; i++)
-        {
-            if (buildingsInSphereDetection[i] == null)
-            {
-                buildingsInSphereDetection.Remove(buildingsInSphereDetection[i]);
-            }
-        }
+    //    for (int i = 0; i < buildingsInSphereDetection.Count; i++)
+    //    {
+    //        if (buildingsInSphereDetection[i] == null)
+    //        {
+    //            buildingsInSphereDetection.Remove(buildingsInSphereDetection[i]);
+    //        }
+    //    }
 
-        foreach (var building in buildingsInSphereDetection)
-        {
-            if (building.GetComponent<Building>().isCommericial == false)
-            {
-                residentialNearby++;
-            }
-        }
-    }
+    //    foreach (var building in buildingsInSphereDetection)
+    //    {
+    //        if (building.GetComponent<Building>().isCommericial == false)
+    //        {
+    //            residentialNearby++;
+    //        }
+    //    }
+    //}
 
-    private void UpdateCommericialBuildings()
-    {
-        commercialNearby = 0;
+    //private void UpdateCommericialBuildings()
+    //{
+    //    commercialNearby = 0;
 
-        for (int i = 0; i < buildingsInSphereDetection.Count; i++)
-        {
-            if (buildingsInSphereDetection[i] == null)
-            {
-                buildingsInSphereDetection.Remove(buildingsInSphereDetection[i]);
-            }
-        }
+    //    for (int i = 0; i < buildingsInSphereDetection.Count; i++)
+    //    {
+    //        if (buildingsInSphereDetection[i] == null)
+    //        {
+    //            buildingsInSphereDetection.Remove(buildingsInSphereDetection[i]);
+    //        }
+    //    }
 
-        foreach (var building in buildingsInSphereDetection)
-        {
-            if (building.GetComponent<Building>().isCommericial == true)
-            {
-                commercialNearby++;
-            }
-        }
-    }
+    //    foreach (var building in buildingsInSphereDetection)
+    //    {
+    //        if (building.GetComponent<Building>().isCommericial == true)
+    //        {
+    //            commercialNearby++;
+    //        }
+    //    }
+    //}
 }

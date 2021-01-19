@@ -27,7 +27,7 @@ public class PointsManager : MonoBehaviour
 
         foreach (var building in allBuildings)
         {
-            calcPoints += building.points;
+            calcPoints += building.pointsOfficial;
         }
 
         currentPoints = calcPoints;

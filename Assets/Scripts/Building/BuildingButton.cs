@@ -12,7 +12,7 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     [SerializeField] private LayerMask planetMask = new LayerMask();
     [SerializeField] private LayerMask buildingMask = new LayerMask();
 
-    [SerializeField] private List<GameObject> buildingsInSphereDetectionCurrent = new List<GameObject>();
+    //[SerializeField] private List<GameObject> buildingsInSphereDetectionCurrent = new List<GameObject>();
 
     private Vector3 rendererRotation;
 
@@ -30,7 +30,6 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         moneyManager = FindObjectOfType<MoneyManager>();
         populationManager = FindObjectOfType<PopulationManager>();
         pointsManager = FindObjectOfType<PointsManager>();
-
     }
 
     void Update()
@@ -40,6 +39,39 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             UpdateBuildingPreview();
 
             UpdatePointText();
+
+            UpdateOtherBuildingsPointTempText();
+        }
+    }
+
+    private void UpdateOtherBuildingsPointTempText()
+    {
+        var buildingsInSphereDetection = buildingPreviewInstance.GetComponent<Building>().buildingsInSphereDetection;
+
+        foreach (var building in buildingsInSphereDetection)
+        {
+            int currentPoints = building.GetComponent<Building>().pointsOfficial;
+
+            int newPoints = building.GetComponent<Building>().points;
+
+            var thisBuilding = building.GetComponent<Building>();
+
+            thisBuilding.scoreText.gameObject.SetActive(true);
+
+            thisBuilding.scoreText.text = thisBuilding.points.ToString();
+
+            int newPointsDifference = Mathf.Abs(thisBuilding.points - thisBuilding.pointsOfficial);
+
+            if (currentPoints < newPoints)
+            {
+                thisBuilding.scoreText.text = $"+{(newPointsDifference).ToString()}";
+                thisBuilding.scoreText.color = Color.green;
+            }
+            else if (currentPoints > newPoints)
+            {
+                thisBuilding.scoreText.text = $"-{(newPointsDifference).ToString()}";
+                thisBuilding.scoreText.color = Color.red;
+            }
         }
     }
 
@@ -58,14 +90,14 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
         buildingPreviewInstance.transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal);
 
-        //if (TryPlaceBuilding(hit.point))
-        //{
-        //    buildingPreviewInstance.GetComponent<Renderer>().material.SetColor("_Color", Color.green);
-        //}
-        //else
-        //{
-        //    buildingPreviewInstance.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
-        //}
+        if (TryPlaceBuilding(hit.point))
+        {
+            buildingPreviewInstance.GetComponentInChildren<Renderer>().material.SetColor("_Color", Color.green);
+        }
+        else
+        {
+            buildingPreviewInstance.GetComponentInChildren<Renderer>().material.SetColor("_Color", Color.red);
+        }
 
         if (!buildingPreviewInstance.activeSelf)
         {
@@ -74,6 +106,26 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
         RotateBuilding();
 
+    }
+
+    private bool TryPlaceBuilding(Vector3 point)
+    {
+        BoxCollider buildingCollider = buildingPreviewInstance.GetComponent<BoxCollider>();
+
+        // can't get checkbox to function as intended
+
+        if (Physics.CheckBox(
+                    point + buildingCollider.center,
+                    buildingCollider.size / 2,
+                    Quaternion.identity,
+                    planetMask))
+        {
+            return true;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     private void RotateBuilding()
@@ -131,7 +183,10 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         {
             newBuilding = InstantiateNewBuilding(newBuilding, hit);
         }
+
         Destroy(buildingPreviewInstance);
+
+        CleanUpBuildingScoreText();
     }
 
     private GameObject InstantiateNewBuilding(GameObject newBuilding, RaycastHit hit)
@@ -161,10 +216,34 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
             newBuilding.GetComponent<Building>().scoreText.gameObject.SetActive(false);
 
+            foreach (var building in buildingPreviewInstance.GetComponent<Building>().buildingsInSphereDetection)
+            {
+                building.GetComponent<Building>().pointsOfficial = building.GetComponent<Building>().points;
+            }
+
+            newBuilding.GetComponent<Building>().pointsOfficial = buildingPreviewInstance.GetComponent<Building>().points;
+
+
             pointsManager.CalculatePoints();
+
         }
 
         return newBuilding;
+    }
+
+    private void CleanUpBuildingScoreText()
+    {
+        var buildingsInSphereDetection = buildingPreviewInstance.GetComponent<Building>().buildingsInSphereDetection;
+
+        foreach (var building in buildingsInSphereDetection)
+        {
+            var thisBuilding = building.GetComponent<Building>();
+
+            thisBuilding.scoreText.gameObject.SetActive(false);
+
+        }
+
+        buildingPreviewInstance = null;
     }
 
     private void UseResidents(GameObject newBuilding)
@@ -178,24 +257,6 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     }
 
-    private bool TryPlaceBuilding(Vector3 point)
-    {
-        BoxCollider buildingCollider = buildingPreviewInstance.GetComponent<BoxCollider>();
-
-        // can't get checkbox to function as intended
-
-        if (Physics.CheckBox(
-                    point + buildingCollider.center,
-                    buildingCollider.size / 2,
-                    Quaternion.identity,
-                    planetMask))
-        {
-            return true;
-        }
-        else
-        {
-            return true;
-        }
-    }
+    
 
 }

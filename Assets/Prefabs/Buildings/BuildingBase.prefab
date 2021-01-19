@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8547996504107357434}
   - component: {fileID: 2698050059362548640}
   - component: {fileID: 2087558259879319052}
+  - component: {fileID: 2051933346836747225}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -99,6 +100,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &2051933346836747225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 208730450800701670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d95ea6506cfea53469c7e50969651797, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2213786268379563060
 GameObject:
   m_ObjectHideFlags: 0
@@ -232,9 +245,8 @@ MonoBehaviour:
   sphereDetection: {fileID: 47513167784382431}
   scoreText: {fileID: 922385919948354442}
   detectionRadius: 10
+  points: 0
   buildingsInSphereDetection: []
-  residentialNearby: 0
-  commercialNearby: 0
   isPlaced: 0
 --- !u!114 &109916006703556471
 MonoBehaviour:
@@ -260,7 +272,6 @@ GameObject:
   - component: {fileID: 8807369448014007524}
   - component: {fileID: 2569745172969713345}
   - component: {fileID: 922385919948354442}
-  - component: {fileID: 6449620309083000371}
   m_Layer: 0
   m_Name: ScoreText
   m_TagString: Untagged
@@ -384,18 +395,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &6449620309083000371
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9143682217839697231}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d95ea6506cfea53469c7e50969651797, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &3341248197609391083
 PrefabInstance:
   m_ObjectHideFlags: 0
