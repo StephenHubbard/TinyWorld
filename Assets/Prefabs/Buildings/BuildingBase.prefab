@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2698050059362548640}
   - component: {fileID: 2087558259879319052}
   - component: {fileID: 2051933346836747225}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,7 +121,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2665374916975821472}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Renderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -151,7 +151,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6917296360998392102}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: ResidentSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -181,10 +181,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8411325394785898150}
-  - component: {fileID: 6651452042827794645}
   - component: {fileID: 3337031642553937262}
   - component: {fileID: 109916006703556471}
-  m_Layer: 11
+  - component: {fileID: 105356177585348317}
+  - component: {fileID: 1618015570401858739}
+  m_Layer: 0
   m_Name: BuildingBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,19 +210,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &6651452042827794645
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8411325394785407622}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &3337031642553937262
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,8 +234,10 @@ MonoBehaviour:
   scoreText: {fileID: 922385919948354442}
   detectionRadius: 10
   points: 0
+  pointsOfficial: 0
   buildingsInSphereDetection: []
   isPlaced: 0
+  canPlace: 1
 --- !u!114 &109916006703556471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -261,6 +251,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myBuilding: {fileID: 0}
+--- !u!54 &105356177585348317
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8411325394785407622}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &1618015570401858739
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8411325394785407622}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9143682217839697231
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,6 +424,10 @@ PrefabInstance:
     - target: {fileID: 3384089468383071284, guid: 83851f4a6438f984ca28d065aea10b8a, type: 3}
       propertyPath: m_Name
       value: sphereDetection
+      objectReference: {fileID: 0}
+    - target: {fileID: 3384089468383071284, guid: 83851f4a6438f984ca28d065aea10b8a, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3384089468383071284, guid: 83851f4a6438f984ca28d065aea10b8a, type: 3}
       propertyPath: m_IsActive

@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using UnityEngine.InputSystem;
 
 public class PointsManager : MonoBehaviour
 {
     [SerializeField] TMP_Text pointsTexts = null;
     [SerializeField] public int currentPoints = 0;
+
+    [SerializeField] Building[] allBuildings = null;
 
     void Start()
     {
@@ -17,13 +20,20 @@ public class PointsManager : MonoBehaviour
     void Update()
     {
         pointsTexts.text = $"Points: {currentPoints}";
+
+        CalculatePoints();
+
+        
+    }
+
+    public void CalculateTotalBuildings()
+    {
+        allBuildings = FindObjectsOfType<Building>();
     }
 
     public void CalculatePoints()
     {
         int calcPoints = 0;
-
-        Building[] allBuildings = FindObjectsOfType<Building>();
 
         foreach (var building in allBuildings)
         {

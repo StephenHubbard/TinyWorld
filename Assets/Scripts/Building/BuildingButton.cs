@@ -14,7 +14,7 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     //[SerializeField] private List<GameObject> buildingsInSphereDetectionCurrent = new List<GameObject>();
 
-    private Vector3 rendererRotation;
+    private Quaternion rendererRotation;
 
     private GameObject buildingPreviewInstance;
     private Camera mainCamera;
@@ -84,19 +84,34 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, planetMask)) { return; }
+        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, planetMask))
+        {
+            return;
+        }
 
         buildingPreviewInstance.transform.position = hit.point;
 
+        RotateBuilding();
+
         buildingPreviewInstance.transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal);
 
-        if (TryPlaceBuilding(hit.point))
+
+        Transform rendererTransform = buildingPreviewInstance.transform.Find("Renderer");
+
+        if (TryPlaceBuilding())
         {
-            buildingPreviewInstance.GetComponentInChildren<Renderer>().material.SetColor("_Color", Color.green);
+            foreach (Transform child in rendererTransform)
+            {
+                child.GetComponent<Renderer>().material.SetColor("_Color", Color.green);
+            }
+
         }
         else
         {
-            buildingPreviewInstance.GetComponentInChildren<Renderer>().material.SetColor("_Color", Color.red);
+            foreach (Transform child in rendererTransform)
+            {
+                child.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
+            }
         }
 
         if (!buildingPreviewInstance.activeSelf)
@@ -104,27 +119,19 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             buildingPreviewInstance.SetActive(true);
         }
 
-        RotateBuilding();
 
     }
 
-    private bool TryPlaceBuilding(Vector3 point)
+    private bool TryPlaceBuilding()
     {
-        BoxCollider buildingCollider = buildingPreviewInstance.GetComponent<BoxCollider>();
 
-        // can't get checkbox to function as intended
-
-        if (Physics.CheckBox(
-                    point + buildingCollider.center,
-                    buildingCollider.size / 2,
-                    Quaternion.identity,
-                    planetMask))
+        if (buildingPreviewInstance.GetComponent<Building>().canPlace)
         {
             return true;
         }
         else
         {
-            return true;
+            return false;
         }
     }
 
@@ -133,14 +140,14 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         if (Input.GetKey(KeyCode.Q))
         {
             var thisRenderer = buildingPreviewInstance.transform.Find("Renderer");
-            thisRenderer.Rotate(0, 100 * Time.deltaTime, 0);
-            rendererRotation = new Vector3(thisRenderer.transform.rotation.eulerAngles.x, thisRenderer.transform.rotation.eulerAngles.y, thisRenderer.transform.rotation.eulerAngles.z);
+            thisRenderer.transform.Rotate(0, 100 * Time.deltaTime, 0);
+            //rendererRotation = new Vector3(thisRenderer.transform.rotation.eulerAngles.x, thisRenderer.transform.rotation.eulerAngles.y, thisRenderer.transform.rotation.eulerAngles.z);
         }
         if (Input.GetKey(KeyCode.E))
         {
             var thisRenderer = buildingPreviewInstance.transform.Find("Renderer");
-            thisRenderer.Rotate(0, -100 * Time.deltaTime, 0);
-            rendererRotation = new Vector3(thisRenderer.transform.rotation.eulerAngles.x, thisRenderer.transform.rotation.eulerAngles.y, thisRenderer.transform.rotation.eulerAngles.z);
+            thisRenderer.transform.Rotate(0, -100 * Time.deltaTime, 0);
+            //rendererRotation = new Vector3(thisRenderer.transform.rotation.eulerAngles.x, thisRenderer.transform.rotation.eulerAngles.y, thisRenderer.transform.rotation.eulerAngles.z);
         }
     }
 
@@ -150,11 +157,6 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
         buildingPreviewInstance = Instantiate(buildingPrefab);
 
-        //scoreText = buildingPreviewInstance.transform.Find("ScoreText").gameObject.GetComponent<TextMeshPro>();
-
-        //buildingPreviewInstance.GetComponent<Building>().toggleSphereDetectionGO();
-
-        
         if (moneyManager.currentDollars < buildingPreviewInstance.GetComponent<Building>().GetCost())
         {
             print("not enough money");
@@ -173,7 +175,6 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         if (buildingPreviewInstance == null) { return; }
 
-        //buildingsInSphereDetectionCurrent = buildingPreviewInstance.GetComponent<Building>().buildingsInSphereDetection;
 
         GameObject newBuilding = null;
 
@@ -184,18 +185,23 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             newBuilding = InstantiateNewBuilding(newBuilding, hit);
         }
 
+        print("hit");
+
         Destroy(buildingPreviewInstance);
+
+        pointsManager.CalculateTotalBuildings();
+
 
         CleanUpBuildingScoreText();
     }
 
     private GameObject InstantiateNewBuilding(GameObject newBuilding, RaycastHit hit)
     {
-        if (TryPlaceBuilding(hit.point))
+        if (TryPlaceBuilding())
         {
             newBuilding = Instantiate(buildingPrefab, hit.point, Quaternion.identity);
 
-            //newBuilding.GetComponent<Building>().buildingsInSphereDetection = buildingsInSphereDetectionCurrent;
+            newBuilding.transform.rotation = buildingPreviewInstance.transform.rotation;
         }
         else
         {
@@ -224,9 +230,10 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             newBuilding.GetComponent<Building>().pointsOfficial = buildingPreviewInstance.GetComponent<Building>().points;
 
 
-            pointsManager.CalculatePoints();
 
         }
+
+
 
         return newBuilding;
     }

@@ -30,6 +30,7 @@ public class Building : MonoBehaviour
     private PopulationManager populationManager;
 
     public bool isPlaced = false;
+    public bool canPlace = true;
 
     
 
@@ -55,11 +56,28 @@ public class Building : MonoBehaviour
         }
 
         StartCoroutine(UpdateBuildingsCounts());
-
-
     }
 
-    
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.GetComponent<Building>() || collision.gameObject.GetComponent<Environment>())
+        {
+            canPlace = false;
+        }
+        else
+        {
+            canPlace = true;
+        }
+    }
+
+    //private void OnCollisionExit(Collision collision)
+    //{
+    //    if (collision.gameObject.GetComponent<Building>() || collision.gameObject.GetComponent<Environment>())
+    //    {
+    //        canPlace = true;
+    //    }
+    //}
+
 
     public void addObjectToList(GameObject go)
     {

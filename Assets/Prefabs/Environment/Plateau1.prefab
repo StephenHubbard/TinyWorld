@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4785115007484223151}
   - component: {fileID: 4774973998283937965}
   - component: {fileID: 4824492495140080151}
+  - component: {fileID: -7657532472801728994}
   m_Layer: 0
   m_Name: Plateau1
   m_TagString: Environment
@@ -96,3 +97,15 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: b2d7d77df4449b24fb2fffe6ca115874, type: 3}
+--- !u!114 &-7657532472801728994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4762054809633819539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f46c1c32cccaf9488b5e7570d420704, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
