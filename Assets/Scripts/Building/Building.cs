@@ -26,7 +26,6 @@ public class Building : MonoBehaviour
     //[SerializeField] private int residentialNearby = 0;
     //[SerializeField] private int commercialNearby = 0;
 
-    private MoneyManager moneyManager;
     private PopulationManager populationManager;
 
     public bool isPlaced = false;
@@ -36,16 +35,12 @@ public class Building : MonoBehaviour
 
     void Start()
     {
-        moneyManager = FindObjectOfType<MoneyManager>();
         populationManager = FindObjectOfType<PopulationManager>();
 
         alterSphereDetectionSize();
 
-        if (isPlaced && isCommericial)
-        {
-            StartCoroutine(GenerateMoney());
-        }
-        else if (isPlaced && !isCommericial)
+        
+        if (isPlaced && !isCommericial)
         {
             populationManager.currentPopulation += residents;
         }
@@ -119,12 +114,7 @@ public class Building : MonoBehaviour
         return workersNeeded;
     }
 
-    private IEnumerator GenerateMoney()
-    {
-        yield return new WaitForSeconds(1f);
-        moneyManager.currentDollars += generateDollarsPerSecond;
-        StartCoroutine(GenerateMoney());
-    }
+    
 
     private IEnumerator UpdateBuildingsCounts()
     {

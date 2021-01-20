@@ -5,12 +5,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using TMPro;
+using UnityEngine.UI;
 
 public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] private GameObject buildingPrefab = null;
     [SerializeField] private LayerMask planetMask = new LayerMask();
     [SerializeField] private LayerMask buildingMask = new LayerMask();
+    [SerializeField] private ScrollRect scrollRect = null;
 
     //[SerializeField] private List<GameObject> buildingsInSphereDetectionCurrent = new List<GameObject>();
 
@@ -19,17 +21,17 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     private GameObject buildingPreviewInstance;
     private Camera mainCamera;
 
-    private MoneyManager moneyManager;
-    private PopulationManager populationManager;
     private PointsManager pointsManager;
+    private HandleNewBuildings handleNewBuildings;
 
     void Start()
     {
         mainCamera = Camera.main;
 
-        moneyManager = FindObjectOfType<MoneyManager>();
-        populationManager = FindObjectOfType<PopulationManager>();
         pointsManager = FindObjectOfType<PointsManager>();
+        handleNewBuildings = FindObjectOfType<HandleNewBuildings>();
+
+        scrollRect = GameObject.Find("GridList").GetComponent<ScrollRect>();
     }
 
     void Update()
@@ -157,17 +159,8 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
         buildingPreviewInstance = Instantiate(buildingPrefab);
 
-        if (moneyManager.currentDollars < buildingPreviewInstance.GetComponent<Building>().GetCost())
-        {
-            print("not enough money");
-            Destroy(buildingPreviewInstance);
-        }
+        scrollRect.GetComponent<ScrollRect>().enabled = false;
 
-        if (populationManager.currentPopulation < buildingPreviewInstance.GetComponent<Building>().GetWorkersNeeded())
-        {
-            print("not enough workers");
-            Destroy(buildingPreviewInstance);
-        }
 
     }
 
@@ -185,11 +178,11 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             newBuilding = InstantiateNewBuilding(newBuilding, hit);
         }
 
-        print("hit");
-
         Destroy(buildingPreviewInstance);
 
         pointsManager.CalculateTotalBuildings();
+
+        scrollRect.GetComponent<ScrollRect>().enabled = true;
 
 
         CleanUpBuildingScoreText();
@@ -214,9 +207,7 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
             newBuilding.transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal);
 
-            BuyBuilding(newBuilding);
 
-            UseResidents(newBuilding);
 
             newBuilding.GetComponent<Building>().sphereDetection.GetComponent<MeshRenderer>().enabled = false;
 
@@ -228,12 +219,13 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             }
 
             newBuilding.GetComponent<Building>().pointsOfficial = buildingPreviewInstance.GetComponent<Building>().points;
+            
+            scrollRect.GetComponent<ScrollRect>().enabled = true;
 
+            handleNewBuildings.SpawnNewButton();
 
-
+            Destroy(gameObject);
         }
-
-
 
         return newBuilding;
     }
@@ -253,16 +245,7 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         buildingPreviewInstance = null;
     }
 
-    private void UseResidents(GameObject newBuilding)
-    {
-        populationManager.currentPopulation -= newBuilding.GetComponent<Building>().GetWorkersNeeded();
-    }
-
-    private void BuyBuilding(GameObject newBuilding)
-    {
-        moneyManager.currentDollars -= newBuilding.GetComponent<Building>().GetCost();
-
-    }
+    
 
     
 
